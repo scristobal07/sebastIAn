@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IA para Ejercicios | SebastIAn</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="background-glow"></div>
+
+<header>
+  <a href="/" class="logo">Sebast<span>IA</span>n</a>
+  <nav>
+    <a href="/#servicios">Servicios</a>
+    <a href="calculadora.html">Calculadora</a>
+    <a href="apuntes.html">Apuntes</a>
+    <a href="portafolio.html">Portafolio</a>
+    <a href="/#contacto" class="nav-btn">Solicitar Proyecto</a>
+  </nav>
+</header>
+
+<a href="/" class="back-link">← Volver al inicio</a>
+
+<section class="service-hero" style="min-height:35vh">
+  <span class="badge">🧠 IA Educativa</span>
+  <h1>Resuelve Ejercicios Paso a Paso</h1>
+  <p>Escribe cualquier problema académico y la IA te explica la solución completa, paso a paso, para que realmente entiendas.</p>
+</section>
+
+<section style="padding-top:30px;padding-bottom:80px">
+  <div class="ejercicios-layout">
+
+    <!-- PANEL ENTRADA -->
+    <div class="ejercicio-input-panel">
+      <h3 style="margin-bottom:20px;font-size:1.1rem">📝 Ingresa tu ejercicio</h3>
+
+      <div style="margin-bottom:15px">
+        <label style="font-size:.85rem;opacity:.7;display:block;margin-bottom:6px">Materia</label>
+        <select id="materiaSelect" style="width:100%">
+          <option value="Matemáticas">Matemáticas</option>
+          <option value="Física">Física</option>
+          <option value="Química">Química</option>
+          <option value="Cálculo">Cálculo</option>
+          <option value="Álgebra">Álgebra</option>
+          <option value="Estadística">Estadística</option>
+          <option value="Economía">Economía</option>
+          <option value="Programación">Programación</option>
+          <option value="General">General / Otra</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:15px">
+        <label style="font-size:.85rem;opacity:.7;display:block;margin-bottom:6px">Describe el ejercicio</label>
+        <textarea id="problemaInput" placeholder="Ejemplo: Calcula la derivada de f(x) = 3x² + 2x - 5 y encuentra los puntos críticos..." style="min-height:200px;width:100%"></textarea>
+      </div>
+
+      <button id="resolverBtn" onclick="resolverEjercicio()" style="width:100%">
+        🚀 Resolver con IA
+      </button>
+
+      <div style="margin-top:20px">
+        <p style="font-size:.8rem;opacity:.5;margin-bottom:12px">Ejemplos rápidos:</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn-outline" onclick="setEjemplo('matematicas')" style="text-align:left;font-size:.82rem;padding:10px 14px">➕ ¿Cómo integro x²·cos(x) por partes?</button>
+          <button class="btn-outline" onclick="setEjemplo('fisica')" style="text-align:left;font-size:.82rem;padding:10px 14px">⚡ Un cuerpo cae desde 80m de altura. ¿Cuánto tarda en llegar?</button>
+          <button class="btn-outline" onclick="setEjemplo('quimica')" style="text-align:left;font-size:.82rem;padding:10px 14px">🧪 Balancea: Fe + O₂ → Fe₂O₃</button>
+          <button class="btn-outline" onclick="setEjemplo('estadistica')" style="text-align:left;font-size:.82rem;padding:10px 14px">📊 Calcula la desviación estándar de: 4, 8, 6, 5, 3, 2, 8, 9</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL SALIDA -->
+    <div class="ejercicio-output-panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h3 style="font-size:1.1rem;opacity:.8">✨ Solución</h3>
+        <button class="btn-outline" id="copiarBtn" onclick="copiarSolucion()" style="padding:7px 14px;font-size:.82rem;display:none">📋 Copiar</button>
+      </div>
+
+      <div id="solucionPlaceholder" class="solucion-placeholder">
+        <div class="ph-icon">🤖</div>
+        <p style="font-size:1rem;margin-bottom:8px">La IA está lista para ayudarte</p>
+        <p style="font-size:.85rem">Escribe tu ejercicio y presiona "Resolver con IA"</p>
+      </div>
+
+      <div id="solucionLoading" style="display:none;text-align:center;padding:60px 20px">
+        <div class="loading-spinner" style="width:40px;height:40px;margin:0 auto 15px;border-width:3px"></div>
+        <p style="opacity:.6;font-size:.9rem">Analizando el problema...</p>
+      </div>
+
+      <div id="solucionContent" class="solucion-content" style="display:none"></div>
+    </div>
+
+  </div>
+
+  <!-- HISTORIAL -->
+  <div id="historialSection" style="max-width:1100px;margin:40px auto 0;display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <h3 style="font-size:1.05rem;opacity:.7">📜 Ejercicios recientes</h3>
+      <button class="btn-outline" onclick="clearHistorial()" style="font-size:.8rem;padding:6px 12px">Limpiar historial</button>
+    </div>
+    <div id="historialGrid" style="display:flex;flex-direction:column;gap:12px"></div>
+  </div>
+</section>
+
+<section style="padding-top:0;padding-bottom:80px">
+  <h2>¿Cómo usar la IA de ejercicios?</h2>
+  <p class="section-sub">Obtén soluciones completas y aprende el proceso, no solo la respuesta.</p>
+  <div class="feature-bg-grid" style="max-width:900px;margin:0 auto">
+    <div class="feature-item">
+      <div class="icon">📝</div>
+      <h4>Escribe el problema</h4>
+      <p>Describe el ejercicio con el mayor detalle posible. Puedes pegar texto directamente de tu libro o apunte.</p>
+    </div>
+    <div class="feature-item">
+      <div class="icon">🎓</div>
+      <h4>Selecciona la materia</h4>
+      <p>Elige la materia correcta para que la IA use el enfoque y la terminología adecuados.</p>
+    </div>
+    <div class="feature-item">
+      <div class="icon">🔢</div>
+      <h4>Recibe la solución</h4>
+      <p>La IA desglosa el problema paso a paso, explicando el razonamiento detrás de cada operación.</p>
+    </div>
+    <div class="feature-item">
+      <div class="icon">💡</div>
+      <h4>Aprende el concepto</h4>
+      <p>Al final recibirás un tip o concepto clave para que recuerdes el método en el futuro.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="/">Inicio</a>
+    <a href="calculadora.html">Calculadora</a>
+    <a href="apuntes.html">Apuntes</a>
+    <a href="portafolio.html">Portafolio</a>
+  </div>
+  <p>corralessebastian970@gmail.com · SebastIAn © 2026</p>
+</footer>
+
+<a class="whatsapp" href="https://wa.me/56995704912" target="_blank">💬</a>
+<div class="toast" id="toast"></div>
+
+<script>
+const HISTORIAL_KEY = 'sebastian_ejercicios';
+let historial = [];
+
+const ejemplos = {
+  matematicas: { materia: 'Cálculo', problema: '¿Cómo se integra x²·cos(x) usando integración por partes? Muéstrame el proceso completo.' },
+  fisica: { materia: 'Física', problema: 'Un cuerpo se deja caer desde una altura de 80 metros. ¿Cuánto tiempo tarda en llegar al suelo? (g = 9.8 m/s²)' },
+  quimica: { materia: 'Química', problema: 'Balancea la siguiente ecuación química: Fe + O₂ → Fe₂O₃. Explica el proceso de balanceo paso a paso.' },
+  estadistica: { materia: 'Estadística', problema: 'Calcula la media, varianza y desviación estándar del siguiente conjunto de datos: 4, 8, 6, 5, 3, 2, 8, 9' },
+};
+
+function setEjemplo(tipo) {
+  const ej = ejemplos[tipo];
+  document.getElementById('problemaInput').value = ej.problema;
+  document.getElementById('materiaSelect').value = ej.materia;
+}
+
+async function resolverEjercicio() {
+  const problema = document.getElementById('problemaInput').value.trim();
+  const materia = document.getElementById('materiaSelect').value;
+  if (!problema) { toast('Escribe un ejercicio primero'); return; }
+
+  const btn = document.getElementById('resolverBtn');
+  btn.disabled = true; btn.textContent = '⏳ Resolviendo...';
+
+  document.getElementById('solucionPlaceholder').style.display = 'none';
+  document.getElementById('solucionLoading').style.display = 'block';
+  document.getElementById('solucionContent').style.display = 'none';
+  document.getElementById('copiarBtn').style.display = 'none';
+
+  try {
+    const res = await fetch('/api/resolver', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ problema, materia }),
+    });
+
+    if (!res.ok) throw new Error('Error en el servidor');
+    const data = await res.json();
+
+    document.getElementById('solucionLoading').style.display = 'none';
+    const content = document.getElementById('solucionContent');
+    content.textContent = data.solucion;
+    content.style.display = 'block';
+    document.getElementById('copiarBtn').style.display = 'block';
+
+    guardarHistorial({ problema, materia, solucion: data.solucion });
+  } catch(e) {
+    document.getElementById('solucionLoading').style.display = 'none';
+    document.getElementById('solucionContent').textContent = '❌ Error al conectar con la IA. Por favor intenta nuevamente.';
+    document.getElementById('solucionContent').style.display = 'block';
+  }
+
+  btn.disabled = false; btn.textContent = '🚀 Resolver con IA';
+}
+
+function copiarSolucion() {
+  const texto = document.getElementById('solucionContent').textContent;
+  navigator.clipboard.writeText(texto).then(() => toast('Solución copiada ✓'));
+}
+
+function guardarHistorial(entry) {
+  historial = JSON.parse(localStorage.getItem(HISTORIAL_KEY) || '[]');
+  historial.unshift({ ...entry, fecha: new Date().toISOString(), id: Date.now().toString() });
+  historial = historial.slice(0, 10);
+  localStorage.setItem(HISTORIAL_KEY, JSON.stringify(historial));
+  renderHistorial();
+}
+
+function renderHistorial() {
+  const section = document.getElementById('historialSection');
+  const grid = document.getElementById('historialGrid');
+  historial = JSON.parse(localStorage.getItem(HISTORIAL_KEY) || '[]');
+  if (historial.length === 0) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+  grid.innerHTML = '';
+  historial.forEach(h => {
+    const div = document.createElement('div');
+    div.style.cssText = 'background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;cursor:pointer;transition:.2s';
+    div.onmouseenter = () => div.style.borderColor = 'rgba(111,124,255,.3)';
+    div.onmouseleave = () => div.style.borderColor = 'rgba(255,255,255,.07)';
+    div.onclick = () => {
+      document.getElementById('problemaInput').value = h.problema;
+      document.getElementById('materiaSelect').value = h.materia;
+      document.getElementById('solucionPlaceholder').style.display = 'none';
+      document.getElementById('solucionContent').textContent = h.solucion;
+      document.getElementById('solucionContent').style.display = 'block';
+      document.getElementById('copiarBtn').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+        <div>
+          <span style="font-size:.75rem;color:#6f7cff;text-transform:uppercase;letter-spacing:.5px">${h.materia}</span>
+          <p style="font-size:.88rem;margin-top:3px;opacity:.8;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${escHtml(h.problema)}</p>
+        </div>
+        <span style="font-size:.75rem;opacity:.4;white-space:nowrap;flex-shrink:0">${formatDate(h.fecha)}</span>
+      </div>`;
+    grid.appendChild(div);
+  });
+}
+
+function clearHistorial() {
+  if (!confirm('¿Borrar todo el historial?')) return;
+  localStorage.removeItem(HISTORIAL_KEY);
+  historial = [];
+  document.getElementById('historialSection').style.display = 'none';
+  toast('Historial borrado');
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function formatDate(iso) {
+  return new Date(iso).toLocaleDateString('es-CL', { day:'2-digit', month:'short' });
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+renderHistorial();
+</script>
+</body>
+</html>

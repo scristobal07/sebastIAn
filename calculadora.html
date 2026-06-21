@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Notas Universitarias | SebastIAn</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="background-glow"></div>
+
+<header>
+  <a href="/" class="logo">Sebast<span>IA</span>n</a>
+  <nav>
+    <a href="/#servicios">Servicios</a>
+    <a href="/#herramientas">Herramientas</a>
+    <a href="apuntes.html">Apuntes</a>
+    <a href="ejercicios.html">Ejercicios IA</a>
+    <a href="/#contacto" class="nav-btn">Solicitar Proyecto</a>
+  </nav>
+</header>
+
+<a href="/" class="back-link">← Volver al inicio</a>
+
+<section class="service-hero" style="min-height:40vh">
+  <span class="badge">🎓 Herramienta Académica</span>
+  <h1>Calculadora de Notas Universitarias</h1>
+  <p>Calcula tu promedio ponderado, simula notas y descubre cuánto necesitas para aprobar tus ramos.</p>
+</section>
+
+<section style="padding-top:40px">
+  <div class="calc-container">
+
+    <!-- TABS -->
+    <div style="display:flex;gap:10px;margin-bottom:30px;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:15px">
+      <button class="filter-btn active" onclick="switchTab('ponderado',this)">Promedio Ponderado</button>
+      <button class="filter-btn" onclick="switchTab('necesito',this)">¿Cuánto necesito?</button>
+      <button class="filter-btn" onclick="switchTab('simulador',this)">Simulador de Notas</button>
+    </div>
+
+    <!-- TAB: PONDERADO -->
+    <div id="tab-ponderado">
+      <div class="calc-table-wrapper">
+        <table class="calc-table" id="notasTable">
+          <thead>
+            <tr>
+              <th>Ramo / Materia</th>
+              <th>Nota (1.0–7.0)</th>
+              <th>Créditos / Peso</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="notasBody">
+            <tr>
+              <td><input class="calc-input" type="text" placeholder="Ej: Cálculo I"></td>
+              <td><input class="calc-input nota-input" type="number" step="0.1" min="1" max="7" placeholder="5.5"></td>
+              <td><input class="calc-input credito-input" type="number" min="1" max="20" placeholder="6" value="6"></td>
+              <td><button class="btn-outline" onclick="removeRow(this)" style="padding:8px 12px;white-space:nowrap">✕</button></td>
+            </tr>
+            <tr>
+              <td><input class="calc-input" type="text" placeholder="Ej: Álgebra Lineal"></td>
+              <td><input class="calc-input nota-input" type="number" step="0.1" min="1" max="7" placeholder="4.0"></td>
+              <td><input class="calc-input credito-input" type="number" min="1" max="20" placeholder="4" value="4"></td>
+              <td><button class="btn-outline" onclick="removeRow(this)" style="padding:8px 12px">✕</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="calc-actions">
+        <button class="btn-outline" onclick="addRow()">+ Agregar ramo</button>
+        <button onclick="calcularPonderado()">Calcular promedio</button>
+        <button class="btn-outline" onclick="clearAll()">Limpiar todo</button>
+      </div>
+
+      <div class="result-panel" id="resultPanel">
+        <div class="result-value" id="resultValue">0.0</div>
+        <div class="result-label">Promedio Ponderado</div>
+        <div class="result-status" id="resultStatus"></div>
+        <div style="margin-top:15px;font-size:.85rem;opacity:.6" id="resultDetail"></div>
+      </div>
+    </div>
+
+    <!-- TAB: NECESITO -->
+    <div id="tab-necesito" style="display:none">
+      <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:30px;max-width:550px;margin:0 auto">
+        <h3 style="margin-bottom:20px;font-size:1.1rem">¿Cuánto necesito en el examen?</h3>
+        <div style="display:flex;flex-direction:column;gap:15px">
+          <div>
+            <label style="font-size:.85rem;opacity:.7;display:block;margin-bottom:6px">Mi nota acumulada (promedio actual)</label>
+            <input class="calc-input" type="number" id="notaActual" step="0.1" min="1" max="7" placeholder="4.2">
+          </div>
+          <div>
+            <label style="font-size:.85rem;opacity:.7;display:block;margin-bottom:6px">Porcentaje de la nota acumulada (%)</label>
+            <input class="calc-input" type="number" id="porcAcumulado" min="1" max="99" placeholder="70" value="70">
+          </div>
+          <div>
+            <label style="font-size:.85rem;opacity:.7;display:block;margin-bottom:6px">Nota mínima para aprobar</label>
+            <input class="calc-input" type="number" id="notaMinima" step="0.1" min="1" max="7" placeholder="4.0" value="4.0">
+          </div>
+          <button onclick="calcularNecesito()">Calcular nota necesaria</button>
+        </div>
+        <div class="result-panel" id="necesitoPanels" style="margin-top:20px">
+          <div class="result-value" id="necesitaValue">0.0</div>
+          <div class="result-label">Nota que necesitas en el examen</div>
+          <div class="result-status" id="necesitaStatus" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: SIMULADOR -->
+    <div id="tab-simulador" style="display:none">
+      <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:30px;max-width:650px;margin:0 auto">
+        <h3 style="margin-bottom:8px;font-size:1.1rem">Simulador de evaluaciones</h3>
+        <p style="font-size:.85rem;opacity:.6;margin-bottom:25px">Simula cómo afectan diferentes notas a tu promedio final.</p>
+        <div id="evalBody">
+          <div class="eval-row" style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;margin-bottom:10px;align-items:center">
+            <input class="calc-input" type="text" placeholder="Nombre evaluación" value="Prueba 1">
+            <input class="calc-input eval-nota" type="number" step="0.1" min="1" max="7" placeholder="Nota" value="5.5">
+            <input class="calc-input eval-pond" type="number" min="1" max="100" placeholder="%" value="25">
+            <button class="btn-outline" onclick="this.closest('.eval-row').remove();simular()" style="padding:8px 12px">✕</button>
+          </div>
+          <div class="eval-row" style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;margin-bottom:10px;align-items:center">
+            <input class="calc-input" type="text" placeholder="Nombre evaluación" value="Prueba 2">
+            <input class="calc-input eval-nota" type="number" step="0.1" min="1" max="7" placeholder="Nota" value="4.8">
+            <input class="calc-input eval-pond" type="number" min="1" max="100" placeholder="%" value="25">
+            <button class="btn-outline" onclick="this.closest('.eval-row').remove();simular()" style="padding:8px 12px">✕</button>
+          </div>
+          <div class="eval-row" style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;margin-bottom:10px;align-items:center">
+            <input class="calc-input" type="text" placeholder="Nombre evaluación" value="Examen final">
+            <input class="calc-input eval-nota" type="number" step="0.1" min="1" max="7" placeholder="Nota" value="5.0">
+            <input class="calc-input eval-pond" type="number" min="1" max="100" placeholder="%" value="50">
+            <button class="btn-outline" onclick="this.closest('.eval-row').remove();simular()" style="padding:8px 12px">✕</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin:15px 0">
+          <button class="btn-outline" onclick="addEval()">+ Agregar evaluación</button>
+          <button onclick="simular()">Simular</button>
+        </div>
+        <div class="result-panel" id="simPanel">
+          <div class="result-value" id="simValue">0.0</div>
+          <div class="result-label" id="simLabel">Nota final simulada</div>
+          <div class="result-status" id="simStatus" style="margin-top:10px"></div>
+          <div style="font-size:.8rem;opacity:.5;margin-top:8px" id="simWarning"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- INFO -->
+<section style="padding-top:40px;padding-bottom:80px">
+  <h2>¿Cómo usar la calculadora?</h2>
+  <p class="section-sub">Tres herramientas para controlar tus notas universitarias.</p>
+  <div class="feature-bg-grid" style="max-width:800px;margin:0 auto">
+    <div class="feature-item">
+      <div class="icon">⚖️</div>
+      <h4>Promedio Ponderado</h4>
+      <p>Ingresa la nota de cada ramo y sus créditos SCT para obtener tu promedio real ponderado.</p>
+    </div>
+    <div class="feature-item">
+      <div class="icon">🎯</div>
+      <h4>¿Cuánto necesito?</h4>
+      <p>Calcula la nota exacta que necesitas en el examen final para alcanzar la nota mínima de aprobación.</p>
+    </div>
+    <div class="feature-item">
+      <div class="icon">🎲</div>
+      <h4>Simulador</h4>
+      <p>Simula distintos escenarios con diferentes notas y ponderaciones para planificar tu rendimiento.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="/">Inicio</a>
+    <a href="apuntes.html">Biblioteca de Apuntes</a>
+    <a href="ejercicios.html">Ejercicios IA</a>
+    <a href="portafolio.html">Portafolio</a>
+  </div>
+  <p>corralessebastian970@gmail.com · SebastIAn © 2026</p>
+</footer>
+
+<a class="whatsapp" href="https://wa.me/56995704912" target="_blank">💬</a>
+
+<script>
+function switchTab(tab, btn) {
+  document.querySelectorAll('[id^="tab-"]').forEach(t => t.style.display = 'none');
+  document.getElementById('tab-' + tab).style.display = 'block';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function addRow() {
+  const tbody = document.getElementById('notasBody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input class="calc-input" type="text" placeholder="Nombre del ramo"></td>
+    <td><input class="calc-input nota-input" type="number" step="0.1" min="1" max="7" placeholder="4.0"></td>
+    <td><input class="calc-input credito-input" type="number" min="1" max="20" placeholder="4" value="4"></td>
+    <td><button class="btn-outline" onclick="removeRow(this)" style="padding:8px 12px">✕</button></td>
+  `;
+  tbody.appendChild(tr);
+}
+
+function removeRow(btn) {
+  const rows = document.querySelectorAll('#notasBody tr');
+  if (rows.length > 1) btn.closest('tr').remove();
+}
+
+function clearAll() {
+  document.getElementById('notasBody').innerHTML = `
+    <tr>
+      <td><input class="calc-input" type="text" placeholder="Ej: Cálculo I"></td>
+      <td><input class="calc-input nota-input" type="number" step="0.1" min="1" max="7" placeholder="5.5"></td>
+      <td><input class="calc-input credito-input" type="number" min="1" max="20" placeholder="6" value="6"></td>
+      <td><button class="btn-outline" onclick="removeRow(this)" style="padding:8px 12px">✕</button></td>
+    </tr>`;
+  document.getElementById('resultPanel').classList.remove('show');
+}
+
+function calcularPonderado() {
+  const notas = document.querySelectorAll('.nota-input');
+  const creditos = document.querySelectorAll('.credito-input');
+  let sumPond = 0, sumCred = 0, count = 0;
+  for (let i = 0; i < notas.length; i++) {
+    const n = parseFloat(notas[i].value);
+    const c = parseFloat(creditos[i].value);
+    if (!isNaN(n) && !isNaN(c) && c > 0) {
+      sumPond += n * c;
+      sumCred += c;
+      count++;
+    }
+  }
+  if (count === 0) { alert('Ingresa al menos una nota válida'); return; }
+  const promedio = sumPond / sumCred;
+  const panel = document.getElementById('resultPanel');
+  document.getElementById('resultValue').textContent = promedio.toFixed(2);
+  document.getElementById('resultDetail').textContent = `${count} ramo(s) · ${sumCred} créditos totales`;
+  const status = document.getElementById('resultStatus');
+  if (promedio >= 5.0) {
+    status.textContent = '🎉 Excelente rendimiento';
+    status.className = 'result-status status-aprobado';
+  } else if (promedio >= 4.0) {
+    status.textContent = '✅ Aprobado';
+    status.className = 'result-status status-aprobado';
+  } else if (promedio >= 3.5) {
+    status.textContent = '⚠️ En riesgo de reprobar';
+    status.className = 'result-status status-riesgo';
+  } else {
+    status.textContent = '❌ Reprobado';
+    status.className = 'result-status status-reprobado';
+  }
+  panel.classList.add('show');
+}
+
+function calcularNecesito() {
+  const notaAct = parseFloat(document.getElementById('notaActual').value);
+  const porcAc = parseFloat(document.getElementById('porcAcumulado').value) / 100;
+  const notaMin = parseFloat(document.getElementById('notaMinima').value);
+  if (isNaN(notaAct) || isNaN(porcAc) || isNaN(notaMin)) { alert('Completa todos los campos'); return; }
+  const porcExamen = 1 - porcAc;
+  const necesita = (notaMin - notaAct * porcAc) / porcExamen;
+  const panel = document.getElementById('necesitoPanels');
+  const val = Math.max(1, Math.min(7, necesita));
+  document.getElementById('necesitaValue').textContent = val.toFixed(1);
+  const status = document.getElementById('necesitaStatus');
+  if (necesita > 7) {
+    status.textContent = '❌ No es posible aprobar con la nota actual';
+    status.className = 'result-status status-reprobado';
+  } else if (necesita <= 1) {
+    status.textContent = '🎉 ¡Ya tienes la nota asegurada!';
+    status.className = 'result-status status-aprobado';
+  } else if (necesita < 4) {
+    status.textContent = '✅ Está al alcance, ¡tú puedes!';
+    status.className = 'result-status status-aprobado';
+  } else {
+    status.textContent = '⚡ Necesitas esfuerzo extra, ¡adelante!';
+    status.className = 'result-status status-riesgo';
+  }
+  panel.classList.add('show');
+}
+
+function addEval() {
+  const div = document.createElement('div');
+  div.className = 'eval-row';
+  div.style.cssText = 'display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;margin-bottom:10px;align-items:center';
+  div.innerHTML = `
+    <input class="calc-input" type="text" placeholder="Nueva evaluación">
+    <input class="calc-input eval-nota" type="number" step="0.1" min="1" max="7" placeholder="Nota">
+    <input class="calc-input eval-pond" type="number" min="1" max="100" placeholder="%" value="10">
+    <button class="btn-outline" onclick="this.closest('.eval-row').remove();simular()" style="padding:8px 12px">✕</button>
+  `;
+  document.getElementById('evalBody').appendChild(div);
+}
+
+function simular() {
+  const notas = document.querySelectorAll('.eval-nota');
+  const ponds = document.querySelectorAll('.eval-pond');
+  let sum = 0, totalPond = 0;
+  let valid = 0;
+  for (let i = 0; i < notas.length; i++) {
+    const n = parseFloat(notas[i].value);
+    const p = parseFloat(ponds[i].value);
+    if (!isNaN(n) && !isNaN(p) && p > 0) {
+      sum += n * p;
+      totalPond += p;
+      valid++;
+    }
+  }
+  if (valid === 0) return;
+  const prom = sum / totalPond;
+  document.getElementById('simValue').textContent = prom.toFixed(2);
+  const warn = document.getElementById('simWarning');
+  warn.textContent = totalPond !== 100 ? `Nota: la suma de porcentajes es ${totalPond}% (no 100%)` : '';
+  const status = document.getElementById('simStatus');
+  if (prom >= 4.0) {
+    status.textContent = '✅ Aprobado';
+    status.className = 'result-status status-aprobado';
+  } else {
+    status.textContent = '❌ Reprobado';
+    status.className = 'result-status status-reprobado';
+  }
+  document.getElementById('simPanel').classList.add('show');
+}
+</script>
+</body>
+</html>
