@@ -1,0 +1,9 @@
+{
+  "name": "sebastian-ia",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.52.0",
+    "@netlify/functions": "^2.0.0"
+  }
+}

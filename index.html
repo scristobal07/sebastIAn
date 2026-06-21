@@ -1,112 +1,255 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SebastIAn | Soluciones Digitales Impulsadas por IA</title>
-
 <link rel="stylesheet" href="style.css">
-
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
 <div class="background-glow"></div>
 
 <header>
-    <div class="logo">
-        Sebast<span>IA</span>n
-    </div>
-
-```
-<nav>
+  <a href="/" class="logo">Sebast<span>IA</span>n</a>
+  <nav>
     <a href="#servicios">Servicios</a>
-    <a href="#contacto">Contacto</a>
-</nav>
-```
-
+    <a href="#herramientas">Herramientas</a>
+    <a href="#opiniones">Opiniones</a>
+    <a href="portafolio.html">Portafolio</a>
+    <a href="#contacto" class="nav-btn">Solicitar Proyecto</a>
+  </nav>
 </header>
 
+<!-- HERO -->
 <section class="hero">
-
-```
-<h1>Soluciones Digitales Impulsadas por IA</h1>
-
-<p>
-    Automatización • Sitios Web • Excel • Investigación • Asistencia Virtual
-</p>
-
-<div class="hero-buttons">
-    <a href="#contacto" class="btn-primary">Solicitar Proyecto</a>
-    <a href="https://wa.me/56995704912" target="_blank" class="btn-secondary">WhatsApp</a>
-</div>
-```
-
+  <h1>Soluciones Digitales <span>Impulsadas por IA</span></h1>
+  <p>Automatización inteligente, desarrollo web de alto impacto, análisis de datos y herramientas académicas — todo en un solo lugar.</p>
+  <div class="hero-buttons">
+    <a href="#servicios" class="btn-primary">Ver Servicios</a>
+    <a href="https://wa.me/56995704912" target="_blank" class="btn-secondary">💬 WhatsApp</a>
+  </div>
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-value">50+</div>
+      <div class="stat-label">Proyectos entregados</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">98%</div>
+      <div class="stat-label">Satisfacción</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">4</div>
+      <div class="stat-label">Áreas de servicio</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">24h</div>
+      <div class="stat-label">Tiempo de respuesta</div>
+    </div>
+  </div>
 </section>
 
+<!-- SERVICIOS -->
 <section id="servicios">
-
-<h2>Servicios</h2>
-
-<div class="cards">
-
-<div class="card">
-<h3>🤖 IA</h3>
-<p>Automatización y optimización de tareas.</p>
-</div>
-
-<div class="card">
-<h3>💻 Web</h3>
-<p>Desarrollo de sitios modernos y rápidos.</p>
-</div>
-
-<div class="card">
-<h3>📊 Excel</h3>
-<p>Reportes, análisis y organización de datos.</p>
-</div>
-
-<div class="card">
-<h3>🔍 Investigación</h3>
-<p>Búsqueda y recopilación de información.</p>
-</div>
-
-</div>
-
+  <h2>Servicios</h2>
+  <p class="section-sub">Cada servicio diseñado para darte resultados reales, rápidos y de calidad profesional.</p>
+  <div class="cards">
+    <a href="servicios/ia.html" class="card">
+      <div class="card-icon">🤖</div>
+      <h3>Automatización con IA</h3>
+      <p>Optimiza procesos repetitivos, crea flujos inteligentes y ahorra horas de trabajo con soluciones de inteligencia artificial a medida.</p>
+      <span class="card-arrow">Ver cómo funciona →</span>
+    </a>
+    <a href="servicios/web.html" class="card">
+      <div class="card-icon">💻</div>
+      <h3>Desarrollo Web</h3>
+      <p>Sitios modernos, rápidos y visualmente impactantes. Landing pages, portfolios y aplicaciones web con diseño profesional.</p>
+      <span class="card-arrow">Ver cómo funciona →</span>
+    </a>
+    <a href="servicios/excel.html" class="card">
+      <div class="card-icon">📊</div>
+      <h3>Excel Avanzado</h3>
+      <p>Reportes automatizados, dashboards interactivos, fórmulas complejas y macros VBA para potenciar tus datos.</p>
+      <span class="card-arrow">Ver cómo funciona →</span>
+    </a>
+    <a href="servicios/investigacion.html" class="card">
+      <div class="card-icon">🔍</div>
+      <h3>Investigación & Análisis</h3>
+      <p>Búsqueda profunda, síntesis de información, informes académicos y análisis de mercado con IA para decisiones fundamentadas.</p>
+      <span class="card-arrow">Ver cómo funciona →</span>
+    </a>
+  </div>
 </section>
 
+<!-- HERRAMIENTAS ACADÉMICAS -->
+<section id="herramientas" style="padding-top:0">
+  <h2>Herramientas Académicas</h2>
+  <p class="section-sub">Recursos gratuitos impulsados por IA para estudiantes universitarios.</p>
+  <div class="cards">
+    <a href="calculadora.html" class="card tool-card">
+      <div class="card-icon">🎓</div>
+      <h3>Calculadora de Notas</h3>
+      <p>Calcula tu promedio ponderado universitario, simula notas y descubre qué puntaje necesitas para aprobar.</p>
+      <span class="card-arrow">Abrir calculadora →</span>
+    </a>
+    <a href="apuntes.html" class="card tool-card">
+      <div class="card-icon">📚</div>
+      <h3>Biblioteca de Apuntes</h3>
+      <p>Organiza, busca y gestiona todos tus apuntes universitarios en un solo lugar. Con búsqueda inteligente por materia.</p>
+      <span class="card-arrow">Ver biblioteca →</span>
+    </a>
+    <a href="ejercicios.html" class="card tool-card">
+      <div class="card-icon">🧠</div>
+      <h3>IA para Ejercicios</h3>
+      <p>Resuelve problemas de matemáticas, física, química y más paso a paso. La IA explica cada etapa del proceso.</p>
+      <span class="card-arrow">Resolver ejercicio →</span>
+    </a>
+    <a href="portafolio.html" class="card tool-card">
+      <div class="card-icon">🗂️</div>
+      <h3>Portafolio de Servicios</h3>
+      <p>Explora todos los proyectos y trabajos realizados. Filtros por categoría: IA, Web, Excel e Investigación.</p>
+      <span class="card-arrow">Ver portafolio →</span>
+    </a>
+  </div>
+</section>
+
+<!-- OPINIONES -->
+<section id="opiniones">
+  <h2>Lo que dicen los clientes</h2>
+  <p class="section-sub">Opiniones reales de personas que ya confiaron en SebastIAn.</p>
+  <div class="reviews-grid">
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Sebastian entregó mi landing page en tiempo récord y el diseño quedó exactamente como lo imaginaba. La automatización de formularios que agregó me ahorra 3 horas semanales."</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:linear-gradient(135deg,#2e7cff,#8a2eff)">M</div>
+        <div class="review-info">
+          <strong>María González</strong>
+          <span>Emprendedora · Santiago</span>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"El análisis en Excel que me hizo transformó completamente cómo entiendo mis ventas. Los dashboards son increíbles y súper fáciles de usar. 100% recomendado."</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:linear-gradient(135deg,#25D366,#1a9c4a)">C</div>
+        <div class="review-info">
+          <strong>Carlos Muñoz</strong>
+          <span>Gerente Comercial · Valparaíso</span>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Necesitaba un informe académico urgente y Sebastian lo entregó en menos de 24 horas con una calidad impresionante. La investigación fue profunda y bien citada."</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:linear-gradient(135deg,#ff6b35,#f7c59f)">A</div>
+        <div class="review-info">
+          <strong>Andrea Soto</strong>
+          <span>Estudiante universitaria · Concepción</span>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Automatizó el proceso de envío de correos de mi empresa y ahora todo es automático. Profesional, rápido y con excelente comunicación durante todo el proyecto."</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:linear-gradient(135deg,#8a2eff,#ff6bff)">R</div>
+        <div class="review-info">
+          <strong>Roberto Herrera</strong>
+          <span>Director de Marketing</span>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"Usé la IA para ejercicios durante mis exámenes y me ayudó a entender conceptos que tenía confusos. Explica paso a paso de forma muy clara. Una herramienta increíble."</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:linear-gradient(135deg,#ffc300,#ff5733)">P</div>
+        <div class="review-info">
+          <strong>Paula Ramírez</strong>
+          <span>Estudiante de Ingeniería</span>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">"El sitio web que me creó convirtió más del doble de visitantes desde el primer mes. Diseño moderno, carga rápida y optimizado para SEO. Superó mis expectativas."</p>
+      <div class="review-author">
+        <div class="review-avatar" style="background:linear-gradient(135deg,#00b4d8,#0077b6)">L</div>
+        <div class="review-info">
+          <strong>Luis Vega</strong>
+          <span>Consultor Freelance</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
 <section id="contacto">
-
-<h2>Solicita tu proyecto</h2>
-
-<form action="https://formspree.io/f/TU_FORM_ID" method="POST">
-
-<input type="text" name="nombre" placeholder="Nombre" required>
-
-<input type="email" name="email" placeholder="Correo" required>
-
-<textarea name="mensaje" placeholder="Describe tu proyecto" required></textarea>
-
-<button type="submit">
-Enviar Solicitud
-</button>
-
-</form>
-
+  <h2>Solicita tu proyecto</h2>
+  <p class="section-sub">Cuéntame lo que necesitas y te respondo en menos de 24 horas.</p>
+  <form action="https://formspree.io/f/TU_FORM_ID" method="POST">
+    <input type="text" name="nombre" placeholder="Tu nombre" required>
+    <input type="email" name="email" placeholder="Correo electrónico" required>
+    <select name="servicio">
+      <option value="">¿Qué servicio necesitas?</option>
+      <option value="ia">Automatización con IA</option>
+      <option value="web">Desarrollo Web</option>
+      <option value="excel">Excel Avanzado</option>
+      <option value="investigacion">Investigación & Análisis</option>
+      <option value="otro">Otro</option>
+    </select>
+    <textarea name="mensaje" placeholder="Describe tu proyecto o idea..." required></textarea>
+    <button type="submit">Enviar Solicitud 🚀</button>
+  </form>
 </section>
 
-<a class="whatsapp" href="https://wa.me/56995704912" target="_blank">
-💬
-</a>
+<!-- WHATSAPP -->
+<a class="whatsapp" href="https://wa.me/56995704912" target="_blank" title="WhatsApp">💬</a>
+
+<!-- AI CHAT BUTTON -->
+<button class="chat-bubble" id="chatToggle" title="Chat con IA">🤖</button>
+
+<!-- AI CHAT MODAL -->
+<div class="chat-modal" id="chatModal">
+  <div class="chat-header">
+    <div class="chat-header-info">
+      <div class="chat-status-dot"></div>
+      <div>
+        <h4>SebastIAn IA</h4>
+        <span>Asistente virtual · En línea</span>
+      </div>
+    </div>
+    <button class="chat-close" id="chatClose">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="msg bot">👋 ¡Hola! Soy SebastIAn, tu asistente virtual. ¿En qué puedo ayudarte hoy? Puedo contarte sobre nuestros servicios, herramientas o responder tus preguntas.</div>
+  </div>
+  <div class="chat-input-area">
+    <input type="text" id="chatInput" placeholder="Escribe tu mensaje..." maxlength="500">
+    <button class="chat-send" id="chatSend">➤</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
 <footer>
-<p>corralessebastian970@gmail.com</p>
-<p>SebastIAn © 2026</p>
+  <div class="footer-links">
+    <a href="#servicios">Servicios</a>
+    <a href="calculadora.html">Calculadora</a>
+    <a href="apuntes.html">Apuntes</a>
+    <a href="ejercicios.html">Ejercicios IA</a>
+    <a href="portafolio.html">Portafolio</a>
+  </div>
+  <p>corralessebastian970@gmail.com</p>
+  <p>SebastIAn © 2026 · Soluciones Digitales Impulsadas por IA</p>
 </footer>
 
 <script src="script.js"></script>
-
 </body>
 </html>
-

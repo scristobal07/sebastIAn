@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biblioteca de Apuntes | SebastIAn</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="background-glow"></div>
+
+<header>
+  <a href="/" class="logo">Sebast<span>IA</span>n</a>
+  <nav>
+    <a href="/#servicios">Servicios</a>
+    <a href="calculadora.html">Calculadora</a>
+    <a href="ejercicios.html">Ejercicios IA</a>
+    <a href="portafolio.html">Portafolio</a>
+    <a href="/#contacto" class="nav-btn">Solicitar Proyecto</a>
+  </nav>
+</header>
+
+<a href="/" class="back-link">← Volver al inicio</a>
+
+<section class="service-hero" style="min-height:35vh">
+  <span class="badge">📚 Biblioteca de Apuntes</span>
+  <h1>Tus Apuntes, Siempre a Mano</h1>
+  <p>Organiza y busca todos tus apuntes universitarios por materia. Guarda en el navegador, sin crear cuenta.</p>
+</section>
+
+<section style="padding-top:40px;padding-bottom:80px">
+  <!-- TOOLBAR -->
+  <div class="apuntes-toolbar">
+    <input type="text" id="searchInput" placeholder="🔍 Buscar en mis apuntes..." oninput="filtrarApuntes()">
+    <select id="materiaFilter" onchange="filtrarApuntes()">
+      <option value="">Todas las materias</option>
+    </select>
+    <button onclick="openModal()">+ Nuevo apunte</button>
+  </div>
+
+  <!-- STATS -->
+  <div id="apuntesStats" style="margin-bottom:20px;font-size:.85rem;opacity:.5"></div>
+
+  <!-- GRID -->
+  <div class="apuntes-grid" id="apuntesGrid"></div>
+
+  <!-- EMPTY STATE -->
+  <div class="apunte-empty" id="emptyState">
+    <div style="font-size:4rem;margin-bottom:15px">📝</div>
+    <p style="font-size:1.1rem;margin-bottom:8px">No tienes apuntes todavía</p>
+    <p style="font-size:.9rem">Haz clic en "+ Nuevo apunte" para empezar</p>
+  </div>
+</section>
+
+<!-- MODAL NUEVO APUNTE -->
+<div class="modal-overlay" id="modalNuevo">
+  <div class="modal-box">
+    <h3>✏️ <span id="modalTitle">Nuevo Apunte</span></h3>
+    <input type="hidden" id="editId">
+    <input type="text" id="apunteTitulo" placeholder="Título del apunte *" required>
+    <input type="text" id="apunteMateria" placeholder="Materia (ej: Cálculo I)" list="materiasList">
+    <datalist id="materiasList"></datalist>
+    <textarea id="apunteContenido" placeholder="Escribe tu apunte aquí..." style="min-height:200px" required></textarea>
+    <input type="text" id="apunteTags" placeholder="Etiquetas (separadas por coma): examen, fórmulas...">
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeModal()">Cancelar</button>
+      <button onclick="guardarApunte()">Guardar apunte</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL VER APUNTE -->
+<div class="modal-overlay" id="modalVer">
+  <div class="modal-box" style="max-width:680px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:15px">
+      <div>
+        <span id="verMateria" style="font-size:.75rem;color:#6f7cff;text-transform:uppercase;letter-spacing:.5px"></span>
+        <h3 id="verTitulo" style="margin-top:4px"></h3>
+      </div>
+      <button class="btn-outline" onclick="closeVerModal()" style="padding:6px 12px;flex-shrink:0">✕</button>
+    </div>
+    <div id="verContenido" style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:20px;white-space:pre-wrap;font-size:.92rem;line-height:1.8;max-height:400px;overflow-y:auto"></div>
+    <div id="verTags" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;opacity:.5;font-size:.8rem;margin-top:5px">
+      <span id="verFecha"></span>
+      <div style="display:flex;gap:10px">
+        <button class="btn-outline" onclick="editarDesdeVer()" style="padding:7px 16px;font-size:.85rem">✏️ Editar</button>
+        <button onclick="copiarContenido()" style="padding:7px 16px;font-size:.85rem">📋 Copiar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <div class="footer-links">
+    <a href="/">Inicio</a>
+    <a href="calculadora.html">Calculadora</a>
+    <a href="ejercicios.html">Ejercicios IA</a>
+    <a href="portafolio.html">Portafolio</a>
+  </div>
+  <p>corralessebastian970@gmail.com · SebastIAn © 2026</p>
+</footer>
+
+<a class="whatsapp" href="https://wa.me/56995704912" target="_blank">💬</a>
+
+<script>
+const STORAGE_KEY = 'sebastian_apuntes';
+let apuntes = [];
+let currentVerApunte = null;
+
+function loadApuntes() {
+  try { apuntes = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch(e) { apuntes = []; }
+}
+
+function saveApuntes() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(apuntes));
+}
+
+function getMateriasUnicas() {
+  return [...new Set(apuntes.map(a => a.materia).filter(Boolean))].sort();
+}
+
+function updateMateriaFilter() {
+  const sel = document.getElementById('materiaFilter');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">Todas las materias</option>';
+  getMateriasUnicas().forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m; opt.textContent = m;
+    if (m === cur) opt.selected = true;
+    sel.appendChild(opt);
+  });
+  const dl = document.getElementById('materiasList');
+  dl.innerHTML = '';
+  getMateriasUnicas().forEach(m => {
+    const opt = document.createElement('option'); opt.value = m;
+    dl.appendChild(opt);
+  });
+}
+
+function renderApuntes(lista) {
+  const grid = document.getElementById('apuntesGrid');
+  const empty = document.getElementById('emptyState');
+  const stats = document.getElementById('apuntesStats');
+  grid.innerHTML = '';
+  if (lista.length === 0) {
+    empty.style.display = 'block';
+    stats.textContent = '';
+    return;
+  }
+  empty.style.display = 'none';
+  stats.textContent = `${lista.length} apunte(s) encontrado(s)`;
+  lista.forEach(a => {
+    const card = document.createElement('div');
+    card.className = 'apunte-card';
+    card.onclick = (e) => { if (!e.target.classList.contains('apunte-del')) verApunte(a.id); };
+    card.innerHTML = `
+      <div class="apunte-materia">${a.materia || 'Sin materia'}</div>
+      <h3>${escHtml(a.titulo)}</h3>
+      <p>${escHtml(a.contenido)}</p>
+      <div class="apunte-footer">
+        <span class="apunte-date">${formatDate(a.fecha)}</span>
+        <button class="apunte-del" onclick="eliminarApunte('${a.id}')">Eliminar</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function filtrarApuntes() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const mat = document.getElementById('materiaFilter').value;
+  const filtrados = apuntes.filter(a => {
+    const matchQ = !q || a.titulo.toLowerCase().includes(q) || a.contenido.toLowerCase().includes(q) || (a.tags || '').toLowerCase().includes(q);
+    const matchMat = !mat || a.materia === mat;
+    return matchQ && matchMat;
+  });
+  renderApuntes(filtrados);
+}
+
+function openModal(apunte = null) {
+  document.getElementById('modalTitle').textContent = apunte ? 'Editar Apunte' : 'Nuevo Apunte';
+  document.getElementById('editId').value = apunte ? apunte.id : '';
+  document.getElementById('apunteTitulo').value = apunte ? apunte.titulo : '';
+  document.getElementById('apunteMateria').value = apunte ? (apunte.materia || '') : '';
+  document.getElementById('apunteContenido').value = apunte ? apunte.contenido : '';
+  document.getElementById('apunteTags').value = apunte ? (apunte.tags || '') : '';
+  document.getElementById('modalNuevo').classList.add('open');
+  setTimeout(() => document.getElementById('apunteTitulo').focus(), 100);
+}
+
+function closeModal() {
+  document.getElementById('modalNuevo').classList.remove('open');
+}
+
+function guardarApunte() {
+  const titulo = document.getElementById('apunteTitulo').value.trim();
+  const contenido = document.getElementById('apunteContenido').value.trim();
+  if (!titulo || !contenido) { toast('Completa el título y el contenido'); return; }
+  const editId = document.getElementById('editId').value;
+  if (editId) {
+    const idx = apuntes.findIndex(a => a.id === editId);
+    if (idx !== -1) {
+      apuntes[idx] = { ...apuntes[idx],
+        titulo, contenido,
+        materia: document.getElementById('apunteMateria').value.trim(),
+        tags: document.getElementById('apunteTags').value.trim(),
+      };
+    }
+  } else {
+    apuntes.unshift({
+      id: Date.now().toString(),
+      titulo, contenido,
+      materia: document.getElementById('apunteMateria').value.trim(),
+      tags: document.getElementById('apunteTags').value.trim(),
+      fecha: new Date().toISOString(),
+    });
+  }
+  saveApuntes(); closeModal(); updateMateriaFilter(); filtrarApuntes();
+  toast(editId ? 'Apunte actualizado ✓' : 'Apunte guardado ✓');
+}
+
+function verApunte(id) {
+  const a = apuntes.find(x => x.id === id);
+  if (!a) return;
+  currentVerApunte = a;
+  document.getElementById('verMateria').textContent = a.materia || 'Sin materia';
+  document.getElementById('verTitulo').textContent = a.titulo;
+  document.getElementById('verContenido').textContent = a.contenido;
+  document.getElementById('verFecha').textContent = formatDate(a.fecha);
+  const tagsDiv = document.getElementById('verTags');
+  tagsDiv.innerHTML = '';
+  if (a.tags) {
+    a.tags.split(',').map(t => t.trim()).filter(Boolean).forEach(t => {
+      const span = document.createElement('span');
+      span.textContent = '#' + t;
+      span.style.cssText = 'padding:3px 10px;border-radius:10px;background:rgba(111,124,255,.15);color:#6f7cff;font-size:.78rem';
+      tagsDiv.appendChild(span);
+    });
+  }
+  document.getElementById('modalVer').classList.add('open');
+}
+
+function closeVerModal() { document.getElementById('modalVer').classList.remove('open'); }
+
+function editarDesdeVer() {
+  closeVerModal();
+  setTimeout(() => openModal(currentVerApunte), 200);
+}
+
+function copiarContenido() {
+  if (!currentVerApunte) return;
+  navigator.clipboard.writeText(currentVerApunte.contenido).then(() => toast('Copiado al portapapeles ✓'));
+}
+
+function eliminarApunte(id) {
+  if (!confirm('¿Eliminar este apunte?')) return;
+  apuntes = apuntes.filter(a => a.id !== id);
+  saveApuntes(); updateMateriaFilter(); filtrarApuntes();
+  toast('Apunte eliminado');
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function formatDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('es-CL', { day:'2-digit', month:'short', year:'numeric' });
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closeVerModal(); }
+});
+
+document.getElementById('modalNuevo').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+document.getElementById('modalVer').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeVerModal();
+});
+
+loadApuntes();
+updateMateriaFilter();
+filtrarApuntes();
+</script>
+</body>
+</html>
